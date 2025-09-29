@@ -2,7 +2,7 @@
 
 Este proyecto incluye documentación completa y scripts automatizados para desplegar tu aplicación de inventario en AWS usando tres enfoques diferentes.
 
-## 📁 Estructura de Documentación
+## Estructura de Documentación
 
 ### Documentos Principales
 - **[01-despliegue-ec2-manual.md](docs/01-despliegue-ec2-manual.md)** - Despliegue manual y con User Data en EC2
@@ -18,7 +18,7 @@ Este proyecto incluye documentación completa y scripts automatizados para despl
 ### Configuraciones
 - **`.ebextensions/`** - Archivos de configuración para Elastic Beanstalk
 
-## 🚀 Inicio Rápido
+##  Inicio Rápido
 
 ### Opción 1: EC2 Manual (Aprendizaje)
 ```powershell
@@ -41,7 +41,7 @@ Este proyecto incluye documentación completa y scripts automatizados para despl
 .\scripts\inventory-deploy-eb.ps1
 ```
 
-## 📋 Prerequisitos
+##  Prerequisitos
 
 ### Para todos los enfoques:
 - Cuenta AWS activa
@@ -51,7 +51,7 @@ Este proyecto incluye documentación completa y scripts automatizados para despl
 ### Adicional para Elastic Beanstalk:
 - EB CLI (`pip install awsebcli`)
 
-## 💰 Comparación de Costos
+##  Comparación de Costos
 
 | Opción | Costo Mensual | Características |
 |--------|---------------|-----------------|
@@ -61,9 +61,9 @@ Este proyecto incluye documentación completa y scripts automatizados para despl
 
 *Precios después de Free Tier (primeros 12 meses gratis para t2.micro)*
 
-## 🎯 Recomendaciones por Caso de Uso
+## Recomendaciones por Caso de Uso
 
-### 🎓 **Aprendizaje/Desarrollo**
+###  **Aprendizaje/Desarrollo**
 **→ EC2 Manual**
 - Entender cada componente
 - Presupuesto limitado
@@ -75,13 +75,13 @@ Este proyecto incluye documentación completa y scripts automatizados para despl
 - Múltiples entornos
 - Control total manteniendo automatización
 
-### 🚀 **Startup/Producción**
+###  **Startup/Producción**
 **→ Elastic Beanstalk**
 - Time-to-market rápido
 - Escalabilidad automática
 - Menos mantenimiento
 
-## 🔧 Características de la Aplicación
+##  Características de la Aplicación
 
 - **Framework**: Node.js + Express
 - **Frontend**: React (servido estáticamente)
@@ -89,7 +89,7 @@ Este proyecto incluye documentación completa y scripts automatizados para despl
 - **Puerto**: 3001 (configurable via PORT env var)
 - **PWA**: Service Worker incluido
 
-## 📊 Diferencias Principales
+##  Diferencias Principales
 
 ### EC2 vs Elastic Beanstalk
 
@@ -134,7 +134,7 @@ eb scale 2
 eb open
 ```
 
-## 🆘 Solución de Problemas
+##  Solución de Problemas
 
 ### Problemas Comunes
 1. **AWS CLI no configurado**: `aws configure`
@@ -163,12 +163,3 @@ aws elasticbeanstalk delete-application --application-name <app-name>
 
 ---
 
-## 📞 Soporte
-
-Para preguntas o problemas:
-1. Revisar los logs específicos en cada documento
-2. Verificar configuración de AWS CLI
-3. Consultar la documentación oficial de AWS
-4. Verificar límites de la cuenta AWS
-
-**¡Feliz despliegue! 🚀**
