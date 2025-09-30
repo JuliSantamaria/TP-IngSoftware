@@ -238,87 +238,13 @@ Write-Host $nginxSetup
 Write-Host "Verificando despliegue..."
 try {
     $response = Invoke-WebRequest -Uri "http://${publicIp}:3001" -UseBasicParsing
-    Write-Host "✅ Aplicación respondiendo correctamente"
-    Write-Host "🌐 URL: http://${publicIp}:3001"
+    Write-Host " Aplicación respondiendo correctamente"
+    Write-Host " URL: http://${publicIp}:3001"
 } catch {
-    Write-Host "❌ Error al acceder a la aplicación"
+    Write-Host " Error al acceder a la aplicación"
     Write-Host "Verifica manualmente: http://${publicIp}:3001"
 }
 ```
 
-### Script completo automatizado
 
-```powershell
-# inventory-deploy.ps1
-param(
-    [string]$KeyName = "inventory-app-key",
-    [string]$SecurityGroupName = "inventory-app-sg"
-)
-
-Write-Host "🚀 Iniciando despliegue automático de Inventory App en EC2" -ForegroundColor Green
-
-try {
-    # 1. Crear Security Group
-    $sg_id = aws ec2 create-security-group --group-name $SecurityGroupName --description "Security group for inventory app" --query 'GroupId' --output text
-    
-    # 2. Configurar reglas de seguridad
-    aws ec2 authorize-security-group-ingress --group-id $sg_id --protocol tcp --port 22 --cidr 0.0.0.0/0
-    aws ec2 authorize-security-group-ingress --group-id $sg_id --protocol tcp --port 80 --cidr 0.0.0.0/0
-    aws ec2 authorize-security-group-ingress --group-id $sg_id --protocol tcp --port 3001 --cidr 0.0.0.0/0
-    
-    # 3. Crear Key Pair
-    aws ec2 create-key-pair --key-name $KeyName --query 'KeyMaterial' --output text | Out-File -FilePath "${KeyName}.pem" -Encoding ascii
-    
-    # 4. Obtener AMI más reciente
-    $amiId = aws ec2 describe-images --owners amazon --filters "Name=name,Values=al2023-ami-2023.*-x86_64" "Name=state,Values=available" --query 'Images | sort_by(@, &CreationDate) | [-1].ImageId' --output text
-    
-    # 5. Lanzar instancia
-    $instanceId = aws ec2 run-instances --image-id $amiId --count 1 --instance-type t2.micro --key-name $KeyName --security-group-ids $sg_id --user-data file://user-data.sh --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=inventory-app-server}]" --query 'Instances[0].InstanceId' --output text
-    
-    Write-Host "✅ Instancia creada: $instanceId" -ForegroundColor Green
-    
-    # 6. Esperar a que esté corriendo
-    Write-Host "⏳ Esperando que la instancia esté lista..." -ForegroundColor Yellow
-    aws ec2 wait instance-running --instance-ids $instanceId
-    
-    # 7. Obtener IP pública
-    $publicIp = aws ec2 describe-instances --instance-ids $instanceId --query 'Reservations[0].Instances[0].PublicIpAddress' --output text
-    
-    Write-Host "🎉 Despliegue completado!" -ForegroundColor Green
-    Write-Host "🔗 IP Pública: $publicIp" -ForegroundColor Cyan
-    Write-Host "🌐 URL: http://${publicIp}:3001" -ForegroundColor Cyan
-    Write-Host "🔑 SSH: ssh -i ${KeyName}.pem ec2-user@${publicIp}" -ForegroundColor Cyan
-    
-} catch {
-    Write-Host "❌ Error durante el despliegue: $_" -ForegroundColor Red
-}
-```
-
-### Comandos de gestión adicionales
-
-```powershell
-# Listar instancias
-aws ec2 describe-instances --filters "Name=tag:Name,Values=inventory-app-server" --query 'Reservations[].Instances[].[InstanceId,State.Name,PublicIpAddress]' --output table
-
-# Detener instancia
-aws ec2 stop-instances --instance-ids $instanceId
-
-# Terminar instancia
-aws ec2 terminate-instances --instance-ids $instanceId
-
-# Eliminar Security Group
-aws ec2 delete-security-group --group-id $sg_id
-
-# Eliminar Key Pair
-aws ec2 delete-key-pair --key-name inventory-app-key
-```
-
----
-
-## Ventajas de usar AWS CLI
-
-1. **Automatización completa**: Todo el proceso puede ser scriptado
-2. **Reproducible**: Los mismos comandos producen el mismo resultado
-3. **Control de versiones**: Los scripts pueden ser versionados
-4. **Integración CI/CD**: Fácil integración con pipelines automáticos
 5. **Sin interfaz gráfica**: Ideal para entornos de producción y automatización
