@@ -210,17 +210,3 @@ sudo -u appuser npm install
 sudo -u appuser pm2 start server.js --name inventory-app
 ```
 
----
-
-## Beneficios de cada enfoque:
-
-**Manual Completo:**
-- Control total sobre cada paso
-- Mejor para aprendizaje y debugging
-- Flexibilidad máxima
-
-**Con User Data:**
-- Automatización de pasos repetitivos
-- Configuración base consistente
-- Ahorro de tiempo en configuraciones iniciales
-- Ideal para múltiples instancias
